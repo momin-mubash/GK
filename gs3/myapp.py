@@ -1,15 +1,20 @@
 import requests
-import json
 
 URL = "http://127.0.0.1:8000/studentapi/"
 
-def get_data(id = None):
-    data = {}
-    if id is not None:
-      data = {'id':id}
-      json_data = json.dumps(data)
-      r = requests.get(url = URL, data=json_data)
-      data = r.json()
-      print(data)
+def get_data(id=None):
+    #params means query parameters — the small data you send after a ? in a URL.
+    params = {}
 
+    if id is not None:
+        params['id'] = id
+
+    r = requests.get(URL, params=params)
+    print(r.json())
+
+
+# Call without ID → get list of all students
 get_data()
+
+# Call with ID → get a single student
+# get_data(1)

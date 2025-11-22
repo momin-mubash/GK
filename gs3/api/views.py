@@ -1,29 +1,27 @@
 from django.shortcuts import render
-import io
+from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from .models import Student
 from .serializers import StudentSerializer
-from django.http import HttpResponse
-from rest_framework.renderers import JSONRenderer
 
-# Create your views here.
 def student_api(request):
     if request.method == 'GET':
-     json_data = request.body
-     stream = io.BytesIO(json_data)
-     pythondata = JSONParser().parse(stream)
-     id = pythondata.get('id' , None)
-     if id is not None:
-    #stu is a django model object(instance),its not a json not python dict
-        stu = Student.objects.get(id = id)
-    #Convert MODEL → JSON (using serializer)
-        serializer = StudentSerializer(stu)#you get serializer object here
-        json_data = JSONRenderer().render(serializer.data)#convert serializer object to json#serializer.data is the python dict
-    #just above line creates json bytes from python dict
-        return HttpResponse(json_data , content_type='application/json')
-     
-    
-     stu = Student.objects.all()
-     serializer = StudentSerializer(stu , many=True)
-     json_data = JSONRenderer().render(serializer.data)#convert serializer object to json#serializer.data is the python dict
-     return HttpResponse(json_data , content_type='application/json')
+        # Read ID from query params (correct way for GET)
+        id = request.GET.get('id', None)
+
+        # If ID is provided → return single student
+        if id is not None:
+            try:
+                stu = Student.objects.get(id=id)
+            except Student.DoesNotExist:
+                return JsonResponse({'error': 'Student not found'}, status=404)
+
+            serializer = StudentSerializer(stu)
+            return JsonResponse(serializer.data, safe=False)
+
+        # If NO ID → return all students
+        stu = Student.objects.all()
+        serializer = StudentSerializer(stu, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
