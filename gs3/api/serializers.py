@@ -7,4 +7,7 @@ class StudentSerializer(serializers.Serializer):
     city = serializers.CharField(max_length=100)
 
     
+    #create
+    def create(self , validated_data):
+        return Student.objects.create(**validated_data)
 
