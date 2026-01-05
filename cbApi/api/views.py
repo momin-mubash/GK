@@ -8,66 +8,43 @@ from rest_framework import status
 
 
 class StudentApi(APIView):
-    def get(self, request, pk=None, format=None):
-        # if pk is provided -> single student
-        
-        if pk is not None:
-            try:
-                stu = Student.objects.get(pk=pk)
-                serializer = StudentSerializer(stu)
-                return Response(serializer.data)
-            except Student.DoesNotExist:
-                return Response({"error": "Student not found"}, status=404)
 
-        # if pk not provided -> all students
-        stu = Student.objects.all()
-        serializer = StudentSerializer(stu, many=True)
-        return Response(serializer.data)
-    
+    #GET
+    def get(self, request, pk=None):
+        if pk:
+            stu = Student.objects.get(pk=pk)
+            serializer = StudentSerializer(stu)
+            return Response(serializer.data)
+        else:
+            stu = Student.objects.all()
+            serializer = StudentSerializer(stu, many=True)
+            return Response(serializer.data)
 
-#create operation
-   
-    def post(self, request, format=None):
+    #POST
+    def post(self, request):
         serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'Data Created'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-# COMPLETE UPDATE
-def put(self, request, pk, format=None):
-    try:
-        stu = Student.objects.get(pk=pk)
-    except Student.DoesNotExist:
-        return Response({'error': 'Student not found'}, status=404)
-
-    serializer = StudentSerializer(stu, data=request.data)
-    if serializer.is_valid():
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({'msg': 'Complete Data Updated'}, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=201)
 
-
-# PARTIAL UPDATE
-def patch(self, request, pk, format=None):
-    try:
+    #FULL UPDATE
+    def put(self, request, pk=None):
         stu = Student.objects.get(pk=pk)
-    except Student.DoesNotExist:
-        return Response({'error': 'Student not found'}, status=404)
-
-    serializer = StudentSerializer(stu, data=request.data, partial=True)
-    if serializer.is_valid():
+        serializer = StudentSerializer(stu, data=request.data)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({'msg': 'Partial Data Updated'}, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
 
-
-# DELETE
-def delete(self, request, pk, format=None):
-    try:
+    #PARTIAL UPDATE
+    def patch(self, request, pk=None):
         stu = Student.objects.get(pk=pk)
-    except Student.DoesNotExist:
-        return Response({'error': 'Student not found'}, status=404)
+        serializer = StudentSerializer(stu, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
-    stu.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    #DELETE
+    def delete(self, request, pk=None):
+        stu = Student.objects.get(pk=pk)
+        stu.delete()
+        return Response({"msg": "Deleted"})
