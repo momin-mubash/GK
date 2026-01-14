@@ -21,32 +21,54 @@ class StudentCreate(GenericAPIView,CreateModelMixin):
     def post(self ,request , *args , **kwargs):
         return self.create(request,*args,**kwargs)
     
+#we can combine LIST and CREATE in one class
+
+    
+
+# #RETRIEVE - pk required
+# class StudentRetrieve(GenericAPIView,RetrieveModelMixin):
+#     queryset = Student.objects.all()
+#     serializer_class = StudentSerializer
+
+#     def get(self ,request , *args , **kwargs):
+#         return self.retrieve(request,*args,**kwargs)
+    
+# #UPDATE - pk required
+# class StudentUpdate(GenericAPIView,UpdateModelMixin,RetrieveModelMixin):
+#     queryset = Student.objects.all()
+#     serializer_class = StudentSerializer
+
+#     def get(self , request ,*args ,**kwargs):
+#         return self.retrieve(request,*args,**kwargs)
+
+#     def put(self ,request , *args , **kwargs):
+#         return self.update(request,*args,**kwargs)
+    
+# #DELETE - pk required
+# class StudentDestroy(GenericAPIView,DestroyModelMixin,RetrieveModelMixin):
+#     queryset = Student.objects.all()
+#     serializer_class = StudentSerializer
+
+#     def get(self , request ,*args ,**kwargs):
+#         return self.retrieve(request,*args,**kwargs)
+
+#     def delete(self ,request , *args , **kwargs):
+#         return self.destroy(request,*args,**kwargs)
+    
+
+#or we can combine RETRIEVE, UPDATE, DELETE in one class
 #RETRIEVE - pk required
-class StudentRetrieve(GenericAPIView,RetrieveModelMixin):
+class StudentRetrieve(GenericAPIView,RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
     def get(self ,request , *args , **kwargs):
         return self.retrieve(request,*args,**kwargs)
     
-#UPDATE - pk required
-class StudentUpdate(GenericAPIView,UpdateModelMixin,RetrieveModelMixin):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
-
-    def get(self , request ,*args ,**kwargs):
-        return self.retrieve(request,*args,**kwargs)
-
     def put(self ,request , *args , **kwargs):
         return self.update(request,*args,**kwargs)
-    
-#DELETE - pk required
-class StudentDestroy(GenericAPIView,DestroyModelMixin,RetrieveModelMixin):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
-
-    def get(self , request ,*args ,**kwargs):
-        return self.retrieve(request,*args,**kwargs)
 
     def delete(self ,request , *args , **kwargs):
         return self.destroy(request,*args,**kwargs)
+
+    
