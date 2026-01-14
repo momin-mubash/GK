@@ -1,4 +1,3 @@
-#Generic apiview and model mixin
 from .models import Student
 from .serializers import StudentSerializer
 from rest_framework.generics import GenericAPIView
