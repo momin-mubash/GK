@@ -125,9 +125,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #global seeting for authentication and permission classes for rest framework,all views classes will affect
 #local settings will override these global settings
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES':['rest_framework.authentication.BasicAuthentication'],
-#     'DEFAULT_PERMISSIONS_CLASSES':['rest_framework.permissions.IsAuthenticated']
-
-
+# REST_FRAMEWORK={
+#     'DEFAULT_AUTHENTICATION_CLASSES':[
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES':[
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
 # }
